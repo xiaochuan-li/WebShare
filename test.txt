@@ -1,0 +1,41 @@
+events { # events块
+    worker_connections 1024; # 最大连接数，默认为512
+}
+
+http { # http块
+	include             /etc/nginx/mime.types; # 文件扩展名与文件类型映射表
+    default_type        application/octet-stream;  # 默认文件类型，默认为text/plain
+    sendfile            on; # 允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。
+    keepalive_timeout   65; #连接超时时间，默认为75s，可以在http，server，location块。
+	upstream backend {
+		#ip_hash; # 指定负载均衡的方式，3种，默认为轮询。
+		server 192.168.10.100:8080 max_fails=2 fail_timeout=30s ;
+		server 192.168.10.101:8080 max_fails=2 fail_timeout=30s ;
+		server 127.0.0.1:8027;
+		server 127.0.0.1:8028;
+		server 127.0.0.1:8029;
+	}
+	
+    server { # server块
+        listen       80; # 通过80端口访问nginx时
+        server_name  localhost; # 服务器名，监听地址
+        location / { # location块，# 请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。对以 / 所有地址进行负载均衡
+        	root /root/WebShare;  # 定义服务器的默认网站根目录位置。如果locationURL匹配的是子目录或文件，root没什么作用，一般放在server指令里面或/下
+	        include uwsgi_params;
+	        uwsgi_pass 127.0.0.1:5000; 
+        }
+		
+		location /static { # 请求静态文件时
+			alias /root/WebShare/static;
+		}
+
+        error_page 404 /404.html; # 错误页
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html; # 错误页
+            location = /50x.html {
+        }
+    }
+  }
+
