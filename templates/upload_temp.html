@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content" class="container internal">
+    {% if upload %}
+    <form action="/uploader" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <h3>Bootstrap File Input Demo1</h3>
+        </div>
+    
+        <input type="file" id="uploadFile" name="file" multiple="multiple" class="file-loading" />
+        <input type="submit" />
+    </form>
+    <!--
+    <form action="/uploader" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" multiple="multiple" />
+        <input type="submit" />
+    </form>-->
+    {% endif %}
+
+    {% if share %}
+    <h3>share your files at </h3>
+    <a href={{ data.share_url }}>
+        <img src="/static/images/dir.png"></img>
+    </a>
+    {% endif %}
+    {% if download %}
+    <h3>Enter your code </h3>
+    <form action="/list_from_code" method="POST">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" name="code">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        <!--<input type="text" name="code" />
+        <input type="submit" /> -->
+    </form>
+    {% endif %}
+
+    {% if listfile %}
+    <table border="1" class="pure-table">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>File urls</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name,url in data.files %}
+            {% if loop.index%2 == 0 %}
+            <tr class="pure-table-odd">
+                <td>{{ name }}</td>
+                <td><a href={{ url }}><img src="/static/images/ico_download.png"></img></a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ name }}</td>
+                <td><a href={{ url }}><img src="/static/images/ico_download.png"></img></a></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

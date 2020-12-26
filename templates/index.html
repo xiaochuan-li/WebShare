@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content" class="container">
+    <div class="row">
+        <div class="col-md-3 middle"></div>
+        <div class="col-md-2 middle">
+            <div class="center-block text-center">
+                <br/><br/><br/><br/><br/>
+                <h4>Upload FILES</h4>
+                <br/>
+                <a href="/upload">
+                    <img src="/static/images/上传.png" class="img-thumbnail" />
+                </a>
+            </div>
+        </div>
+        <div class="col-md-2 middle"></div>
+        <div class="col-md-2 middle">
+            <div class="center-block text-center">
+                <br/><br/><br/><br/><br/>
+                <h4>Download FILES</h4>
+                <br/>
+                <a href="/download">
+                    <img src="/static/images/下载.png" class="img-thumbnail" />
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 middle"></div>
+    </div>
+</div>
+{% endblock %}

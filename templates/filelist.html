@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content" class="container internal center-block text-center">
+    <br/><br/><br/>
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+    <table class="table-striped" width="100%">
+        <thead>
+            <tr>
+                <th class="text-center">File Name</th>
+                <th class="text-center">File urls</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name,url in data.files %}
+            {% if loop.index%2 == 0 %}
+            <tr>
+                <td>{{ name }}</td>
+                <td><a href={{ url }}><img src="/static/images/ico_download.png"></img></a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ name }}</td>
+                <td><a href={{ url }}><img src="/static/images/ico_download.png"></img></a></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{% endblock %}

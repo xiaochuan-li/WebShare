@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content" class="container internal center-block text-center">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <br /><br /><br />
+        {% if upload %}
+        <form action="/uploader" method="POST" enctype="multipart/form-data">
+            <input action="/uploader" id="input-b1" name="file" type="file" class="file" multiple
+                data-browse-on-zone-click="true">
+        </form>
+        {% endif %}
+
+        {% if share %}
+        <h3>share your files at </h3>
+
+        <div class="input-group">
+            <input type="text" class="form-control text-muted" name="code" id="address" value={{ data.share_url }}>
+            <span class="input-group-btn">
+                <button class="btn btn-default copy-btn" data-clipboard-target="#address" id="address-btn">Copy</button>
+                <a href={{ data.share_url }}><button class="btn btn-default">Go</button></a>
+                <script>
+                    var test = window.location.host;
+                    var e = document.getElementById("address");
+                    e.value = test + e.value
+                    var clipboard = new ClipboardJS('.copy-btn');
+                </script>
+
+            </span>
+        </div><!-- /input-group -->
+
+        {% endif %}
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+{% endblock %}

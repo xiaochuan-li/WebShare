@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <!-- bootstrap 4.x is supported. You can also use the bootstrap css 3.3.x versions -->
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fileinput/css/fileinput.min.css">
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+    <script src="/static/fileinput/js/plugins/piexif.min.js"></script>
+    <script src="/static/fileinput/js/plugins/sortable.min.js"></script>
+    <script src="/static/fileinput/js/fileinput.min.js"></script>
+
+    <script src="/static/fileinput/themes/fas/theme.min.js"></script>
+    <script src="/static/fileinput/js/locales/zh.js"></script>
+    <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="/static/dist/clipboard.min.js"></script>
+        <style>
+            html {
+                font-family: sans-serif;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+
+            body {
+                margin: 10px;
+            }
+
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            td,
+            th {
+                padding: 0;
+            }
+
+            .middle {
+                float: none;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .pure-table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                empty-cells: show;
+                border: 1px solid #cbcbcb;
+            }
+
+            .pure-table caption {
+                color: #000;
+                font: italic 85%/1 arial, sans-serif;
+                padding: 1em 0;
+                text-align: center;
+            }
+
+            .pure-table td,
+            .pure-table th {
+                border-left: 1px solid #cbcbcb;
+                border-width: 0 0 0 1px;
+                font-size: inherit;
+                margin: 0;
+                overflow: visible;
+                padding: .5em 1em;
+            }
+
+            .pure-table thead {
+                background-color: #e0e0e0;
+                color: #000;
+                text-align: left;
+                vertical-align: bottom;
+            }
+
+            .pure-table td {
+                background-color: transparent;
+            }
+
+            .pure-table-odd td {
+                background-color: #f2f2f2;
+            }
+        </style>
+        <title>FileShare - {{ title }}</title>
+        <link rel="shortcut icon" href="/static/images/Share report.png">
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">李大山吃蛋炒饭</a>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">WebShare <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="/index">主页</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href="/upload">上传</a></li>
+                          <li><a href="/download">下载</a></li>
+                        </ul>
+                      </li>
+                </li>
+                <li class="{{ home_status }}"><a href="/index">主页</a></li>
+                <li class="{{ upload_status }}"><a href="/upload">上传</a></li>
+                <li class="{{ download_status }}"><a href="/download">下载</a></li>
+
+            </ul>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer class="navbar-fixed-bottom">
+        <div style="text-align: center;margin-bottom: 20px;">
+        <div class="container">
+            <a href="https://github.com/xiaochuan-li">
+                <img src="/static/images/Logo GitHub.png"/>
+            </a>
+        </div>
+        </div>
+    </footer>
+</body>
+
+</html>
