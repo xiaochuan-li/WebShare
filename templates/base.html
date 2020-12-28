@@ -107,6 +107,14 @@
             </ul>
         </div>
     </nav>
+    {% if alertMSG %}
+    <div class="alert alert-warning">
+        <a href="#" class="close" data-dismiss="alert">
+            &times;
+        </a>
+        <strong>{{ alertMSG }}</strong>
+    </div>
+    {% endif %}
     {% block content %}{% endblock %}
     <footer class="navbar-fixed-bottom">
         <div style="text-align: center;margin-bottom: 20px;">

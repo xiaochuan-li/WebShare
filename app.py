@@ -6,24 +6,25 @@ import time
 
 import multiprocessing as mp
 
-def uuid():
-  return ''.join(random.sample(string.ascii_letters + string.digits, 20))
+def uuid(n=20):
+  return ''.join(random.sample(string.ascii_letters + string.digits, n))
 app = Flask(__name__)
 
 ROOT = os.getcwd()
 SHAREROOT = os.path.join(ROOT, "shared")
 
-def add_removal(did, internal = 15, dir_ = "remove.txt"):
+def add_removal(did, internal = 15*60, dir_ = "remove.txt"):
   with open(os.path.join(ROOT, dir_),"a", encoding="utf-8") as f:
     f.write("{} {}\n".format(did, time.time()+internal))
 
 class Share(object):
-  def __init__(self, did):
+  def __init__(self, did, internal = 15*60):
     self.did = did
     self.didRoot = os.path.join(SHAREROOT, did)
     os.mkdir(self.didRoot)
     self.txtFile = os.path.join(self.didRoot, "temp.txt")
-    add_removal(did)
+    add_removal(did, internal=internal)
+
   def writeFiles(self, files):
     with open(self.txtFile,"w", encoding="utf-8") as f:
       for file_ in files:
@@ -71,10 +72,23 @@ def download_file(did,filename):
 @app.route('/uploader', methods=['GET', 'POST'])
 def uploader():
   if request.method == 'POST':
-    did = uuid()
-    share = Share(did)
-    share.writeFiles(request.files.getlist('file'))
-    return render_template('upload.html', title = "Share", share=True,upload_status = "active", data = {"share_url":"/listfiles/"+did})
+    try:
+      getDid, getTime = request.form.get("did"), request.form.get("time")
+      if not getTime:
+        getTime = 15
+      getTime = int(float(getTime))
+      if not getDid: 
+        getDid = uuid()
+      
+      while os.path.isdir(SHAREROOT+"/"+getDid):
+        getDid = getDid+uuid(4)
+      did = getDid
+      share = Share(did, internal=getTime*60)
+      share.writeFiles(request.files.getlist('file'))
+      return render_template('upload.html', title = "Share", share=True,upload_status = "active", data = {"share_url":"/listfiles/"+did})
+    except Exception as e:
+      return render_template('upload.html', title="Upload", upload=True, upload_status = "active", alertMSG="Params Not Valid !")
+
   return render_template('upload.html', title="Upload", upload=True, upload_status = "active")
 
 if __name__ == '__main__':

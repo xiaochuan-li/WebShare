@@ -6,9 +6,16 @@
     <div class="col-lg-8">
         <br /><br /><br />
         {% if upload %}
+        <label class="control-label"> 选择文件 </label>
         <form action="/uploader" method="POST" enctype="multipart/form-data">
-            <input action="/uploader" id="input-b1" name="file" type="file" class="file" multiple
-                data-browse-on-zone-click="true">
+            <div class="input-group">
+                <span class="input-group-addon">To</span>
+                <input name="did" type="text" class="form-control" placeholder="WhateverCode">
+                <span class="input-group-addon"></span>
+                <input name="time" type="text" class="form-control" placeholder="15">
+                <span class="input-group-addon">min</span>
+            </div>
+            <input id="input-b1" name="file" type="file" class="file" multiple data-browse-on-zone-click="true">
         </form>
         {% endif %}
 

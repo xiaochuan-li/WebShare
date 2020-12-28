@@ -1,6 +1,5 @@
 import os
 import time
-import schedule
 import shutil
 ROOT = os.getcwd()
 SHAREROOT = os.path.join(ROOT, "shared")
@@ -21,6 +20,4 @@ def remove(dir_ = "remove.txt"):
             f.write("".join(data))
 
 if __name__ == "__main__":
-    schedule.every(10).seconds.do(remove)
-    while True:
-        schedule.run_pending()
+    remove()

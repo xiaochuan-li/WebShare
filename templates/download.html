@@ -2,14 +2,6 @@
 
 {% block content %}
 <div id="content" class="container internal center-block text-center">
-    {% if alertMSG %}
-    <div class="alert alert-warning">
-        <a href="#" class="close" data-dismiss="alert">
-            &times;
-        </a>
-        <strong>{{ alertMSG }}</strong>
-    </div>
-    {% endif %}
     <br/><br/><br/>
     <h3>Enter your code </h3>
     <form action="/list_from_code" method="POST">
