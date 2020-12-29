@@ -5,38 +5,62 @@
     <div class="col-lg-2"></div>
     <div class="col-lg-8">
         <br /><br /><br />
-        {% if upload %}
-        <label class="control-label"> 选择文件 </label>
-        <form action="/uploader" method="POST" enctype="multipart/form-data">
+        {% if configer %}
+        <form action="/configer" method="POST">
             <div class="input-group">
                 <span class="input-group-addon">To</span>
                 <input name="did" type="text" class="form-control" placeholder="WhateverCode">
                 <span class="input-group-addon"></span>
                 <input name="time" type="text" class="form-control" placeholder="15">
                 <span class="input-group-addon">min</span>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Go!</button>
+                </span>
             </div>
-            <input id="input-b1" name="file" type="file" class="file" multiple data-browse-on-zone-click="true">
         </form>
         {% endif %}
+        {% if upload %}
+        <input id="code-uploader" class="form-control text-muted" name="code-uploader" value={{ didUrl }} readonly
+            style="display: none;" />
+        <input id="input-b1" name="file" type="file" class="file" multiple data-browse-on-zone-click="true">
+        <script>
+            $("#input-b1").fileinput({
+                uploadUrl: "uploader",
+                language: 'zh',
+                maxFileSize: 102400,
+                autoReplaceBoolean: false,
+                uploadAsync: true,
+                uploadExtraData: function () {//向后台传递参数
+                    var data = {
+                        did: $("#code-uploader").val(),
+                    };
+                    return data;
+                },
+            });
+            $("#input-b1").on('fileuploaded', function (event, imgUrl,didUrl, msg) {//异步上传成功结果处理
+            });
 
-        {% if share %}
-        <h3>share your files at </h3>
-
+        </script>
+        </form>
+        <br />
         <div class="input-group">
-            <input type="text" class="form-control text-muted" name="code" id="address" value={{ data.share_url }}>
+            <input class="form-control text-muted" name="code" id="address" value={{ didUrl }} />
             <span class="input-group-btn">
-                <button class="btn btn-default copy-btn" data-clipboard-target="#address" id="address-btn">Copy</button>
-                <a href={{ data.share_url }}><button class="btn btn-default">Go</button></a>
+                <button class="btn btn-default copy-btn">Copy</button>
+                <a id="go"><button class="btn btn-default">Go</button></a>
                 <script>
-                    var test = window.location.host;
-                    var e = document.getElementById("address");
-                    e.value = test + e.value
-                    var clipboard = new ClipboardJS('.copy-btn');
+                    var did = document.getElementById("address").value;
+                    document.getElementById("go").setAttribute("href","/listfiles/"+did);
+                    var clipboard = new ClipboardJS('.copy-btn', {
+                        text: function () {
+                            var test = window.location.host;
+                            var e = document.getElementById("address");
+                            return test + "/listfiles/" + e.value;
+                        }
+                    });
                 </script>
-
             </span>
         </div><!-- /input-group -->
-
         {% endif %}
     </div>
     <div class="col-lg-2"></div>

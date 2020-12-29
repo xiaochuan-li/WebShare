@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, send_from_directory, redirect
+from flask import Flask, render_template, request, make_response, send_from_directory, redirect, jsonify
 import random
 import string
 import os
@@ -21,12 +21,12 @@ class Share(object):
   def __init__(self, did, internal = 15*60):
     self.did = did
     self.didRoot = os.path.join(SHAREROOT, did)
-    os.mkdir(self.didRoot)
+    if not os.path.isdir(self.didRoot):
+      os.mkdir(self.didRoot)
     self.txtFile = os.path.join(self.didRoot, "temp.txt")
-    add_removal(did, internal=internal)
 
   def writeFiles(self, files):
-    with open(self.txtFile,"w", encoding="utf-8") as f:
+    with open(self.txtFile,"a", encoding="utf-8") as f:
       for file_ in files:
         file_.save("{}/{}".format(self.didRoot, file_.filename))
         f.write("{} {}\n".format(file_.filename, "/download/{}/{}".format(self.did, file_.filename)))    
@@ -38,7 +38,7 @@ def index():
 
 @app.route('/upload')
 def upload_file():
-   return render_template('upload.html', title="Upload", upload=True, upload_status = "active")
+   return render_template('upload.html', title="Upload", configer=True, upload_status = "active")
 
 @app.route('/download')
 def download():
@@ -69,26 +69,33 @@ def download_file(did,filename):
     response.headers["Content-Disposition"] = "attachment; filename={}".format(filename.encode().decode('latin-1'))
     return response
 
+@app.route("/configer", methods=["POST"])
+def configer():
+  if request.method == "POST":
+    getDid, getTime = request.form.get("did"), request.form.get("time")
+    if not getTime:
+      getTime = 15
+    getTime = int(float(getTime))
+    if not getDid: 
+      getDid = uuid()
+    while os.path.isdir(SHAREROOT+"/"+getDid):
+        getDid = getDid+uuid(4)
+    add_removal(getDid, getTime*60)
+    return render_template('upload.html', title="Upload", upload=True, upload_status = "active", didUrl=getDid)
+  return render_template('upload.html', title="Upload", configer=True, upload_status = "active")
+
 @app.route('/uploader', methods=['GET', 'POST'])
 def uploader():
   if request.method == 'POST':
     try:
-      getDid, getTime = request.form.get("did"), request.form.get("time")
-      if not getTime:
-        getTime = 15
-      getTime = int(float(getTime))
-      if not getDid: 
-        getDid = uuid()
-      
-      while os.path.isdir(SHAREROOT+"/"+getDid):
-        getDid = getDid+uuid(4)
-      did = getDid
-      share = Share(did, internal=getTime*60)
-      share.writeFiles(request.files.getlist('file'))
-      return render_template('upload.html', title = "Share", share=True,upload_status = "active", data = {"share_url":"/listfiles/"+did})
+      getDid = request.form.get("did")
+      share = Share(getDid)
+      filenames = request.files.getlist('file')  
+      share.writeFiles(filenames)
+      res = jsonify({"imgUrl": ",".join([x.filename for x in filenames]), "didUrl":getDid, "msg":"success"})
+      return res
     except Exception as e:
-      return render_template('upload.html', title="Upload", upload=True, upload_status = "active", alertMSG="Params Not Valid !")
-
+      return str(e)
   return render_template('upload.html', title="Upload", upload=True, upload_status = "active")
 
 if __name__ == '__main__':
